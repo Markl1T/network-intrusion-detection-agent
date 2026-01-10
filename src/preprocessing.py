@@ -7,9 +7,6 @@ def clean_features(df, features):
     X = X.clip(-1e9, 1e9)
     return X.astype(np.float32)
 
-def make_binary_label(df):
-    return (df["Attack"] != "Benign").astype(int)
-
 def encode_multiclass(labels):
     encoder = LabelEncoder()
     y = encoder.fit_transform(labels)
