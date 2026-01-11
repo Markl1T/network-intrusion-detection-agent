@@ -1,4 +1,4 @@
 __pycache__/
-data/
+NF-UNSW-NB15-v2.csv
 stage1_rf.pkl
 stage2_rf.pkl

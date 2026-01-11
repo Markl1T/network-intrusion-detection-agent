@@ -14,15 +14,12 @@ def evaluate_model(model, X_test, y_test, model_name="Model", binary=True, encod
     print(f" {model_name} — Evaluation ")
     print(f"{'=' * 10}")
 
-    # Predictions
     y_pred = model.predict(X_test)
 
-    # ---------- Confusion Matrix ----------
     cm = confusion_matrix(y_test, y_pred)
     print("\nConfusion Matrix:")
     print(cm)
 
-    # Display confusion matrix as a plot
     if not binary and encoder is not None:
         labels = encoder.classes_
     else:

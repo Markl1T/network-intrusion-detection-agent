@@ -6,6 +6,7 @@ DATA_DIR = BASE_DIR / "data"
 MODELS_DIR = BASE_DIR / "models"
 
 DATASET_PATH = DATA_DIR / "NF-UNSW-NB15-v2.csv"
+SAMPLED_PATH = DATA_DIR / "dataset_sample.csv"
 
 FEATURES = [
     'L4_SRC_PORT','L4_DST_PORT','PROTOCOL','L7_PROTO',
