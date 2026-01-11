@@ -106,7 +106,7 @@ if st.button("Run Detection", type="primary"):
 
     # ---- STAGE 0: ANOMALY ----
     anomaly_score = -anomaly_model.decision_function(X)[0]
-    st.metric("🔍 Anomaly Score", f"{anomaly_score:.4f}")
+    st.metric("Anomaly Score", f"{anomaly_score:.4f}")
 
     # ---- STAGE 1: BINARY ----
     binary_pred = stage1_model.predict(X)[0]
@@ -118,4 +118,4 @@ if st.button("Run Detection", type="primary"):
         # ---- STAGE 2: MULTICLASS ----
         attack_idx = stage2_model.predict(X)[0]
         attack_name = encoder.inverse_transform([attack_idx])[0]
-        st.warning(f"🧬 Stage 2 Attack Type: **{attack_name}**")
+        st.warning(f"Stage 2 Attack Type: **{attack_name}**")
