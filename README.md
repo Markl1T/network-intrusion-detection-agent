@@ -15,12 +15,16 @@ This project implements an intelligent network intrusion detection system using 
 
 The pipeline is accessible via a **Streamlit web interface** where users can input flow features or generate random samples for testing.
 
+## Live Demo
+The Streamlit application is available at:
+https://network-intrusion-detection-agent.streamlit.app/
+
 
 ## Installation and Setup
 
 ### 1. Clone the Repository
 ```bash
-git clone <https://github.com/Markl1T/network-intrusion-detection-agent>
+git clone https://github.com/Markl1T/network-intrusion-detection-agent
 cd network-intrusion-detector-agent
 ```
 
@@ -65,13 +69,16 @@ network-intrusion-detector-agent/
 
 ### Unsupervised Learning
  - **Isolation Forest**
+
    - Trained only on benign flows to detect anomalous network behavior without requiring labeled attacks.
 
 ### Supervised Learning
  - **Binary Classifier with XGBoost/RandomForest**
+
    - Classifies traffic as Benign or Malicious based on labeled dataset features.
 
  - **Multiclass Classifier with XGBoost/RandomForest**
+ 
    - Predicts specific attack type using malicious flow features. Encodes the attack labels using a LabelEncoder.
 
 
