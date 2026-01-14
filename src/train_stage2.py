@@ -40,7 +40,7 @@ xgb = XGBClassifier(
 rf.fit(X_train, y_train)
 xgb.fit(X_train, y_train)
 
-joblib.dump((rf, encoder), MODELS_DIR / "stage2_rf.pkl", compress=3)
+joblib.dump((rf, encoder), MODELS_DIR / "stage2_rf.pkl")
 joblib.dump((xgb, encoder), MODELS_DIR / "stage2_xgb.pkl")
 
 print("Stage 2 models trained")

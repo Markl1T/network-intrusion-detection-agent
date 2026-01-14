@@ -28,22 +28,22 @@ rf = RandomForestClassifier(
     random_state=42
 )
 
-# xgb = XGBClassifier(
-#     n_estimators=300,
-#     max_depth=6,
-#     learning_rate=0.10,
-#     subsample=0.8,
-#     colsample_bytree=0.8,
-#     random_state=42
-# )
+xgb = XGBClassifier(
+    n_estimators=300,
+    max_depth=6,
+    learning_rate=0.10,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    random_state=42
+)
 
 rf.fit(X_train, y_train)
-# xgb.fit(X_train, y_train)
+xgb.fit(X_train, y_train)
 
-joblib.dump(rf, MODELS_DIR / "stage1_rf.pkl", compress=3)
-# joblib.dump(xgb, MODELS_DIR / "stage1_xgb.pkl")
+joblib.dump(rf, MODELS_DIR / "stage1_rf.pkl")
+joblib.dump(xgb, MODELS_DIR / "stage1_xgb.pkl")
 
 print("Stage 1 models trained")
 
 evaluate_model(rf, X_test, y_test, model_name="Random Forest — Stage 1", binary=True)
-# evaluate_model(xgb, X_test, y_test, model_name="XGBoost — Stage 1", binary=True)
+evaluate_model(xgb, X_test, y_test, model_name="XGBoost — Stage 1", binary=True)

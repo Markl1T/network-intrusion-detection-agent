@@ -32,7 +32,7 @@ model = IsolationForest(
 
 model.fit(X_benign)
 
-joblib.dump(model, MODELS_DIR / "stage0.pkl", compress=("lzma", 9))
+joblib.dump(model, MODELS_DIR / "stage0.pkl")
 
 print("Isolation Forest trained and saved")
 
