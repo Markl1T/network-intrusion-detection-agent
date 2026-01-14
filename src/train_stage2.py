@@ -18,26 +18,29 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=42
 )
 
+print("Training started")
+
 rf = RandomForestClassifier(
-    n_estimators=50,
-    class_weight="balanced",
+    n_estimators=200,
+    max_depth=15,
+    min_samples_leaf=1,
     n_jobs=-1,
     random_state=42
 )
 
 xgb = XGBClassifier(
-    n_estimators=100,
-    max_depth=5,
+    n_estimators=200,
+    max_depth=6,
     learning_rate=0.05,
-    tree_method="hist",
-    eval_metric="mlogloss",
+    subsample=0.8,
+    colsample_bytree=0.8,
     random_state=42
 )
 
 rf.fit(X_train, y_train)
 xgb.fit(X_train, y_train)
 
-joblib.dump((rf, encoder), MODELS_DIR / "stage2_rf.pkl")
+joblib.dump((rf, encoder), MODELS_DIR / "stage2_rf.pkl", compress=3)
 joblib.dump((xgb, encoder), MODELS_DIR / "stage2_xgb.pkl")
 
 print("Stage 2 models trained")

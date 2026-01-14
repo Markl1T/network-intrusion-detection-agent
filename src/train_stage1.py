@@ -17,29 +17,33 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=42
 )
 
+print("Training started")
+
 rf = RandomForestClassifier(
-    n_estimators=50,
-    class_weight="balanced",
+    n_estimators=300,
+    max_depth=None,
+    min_samples_leaf=2,
+    max_features="log2",
     n_jobs=-1,
     random_state=42
 )
 
-xgb = XGBClassifier(
-    n_estimators=100,
-    max_depth=5,
-    learning_rate=0.05,
-    tree_method="hist",
-    eval_metric="logloss",
-    random_state=42
-)
+# xgb = XGBClassifier(
+#     n_estimators=300,
+#     max_depth=6,
+#     learning_rate=0.10,
+#     subsample=0.8,
+#     colsample_bytree=0.8,
+#     random_state=42
+# )
 
 rf.fit(X_train, y_train)
-xgb.fit(X_train, y_train)
+# xgb.fit(X_train, y_train)
 
-joblib.dump(rf, MODELS_DIR / "stage1_rf.pkl")
-joblib.dump(xgb, MODELS_DIR / "stage1_xgb.pkl")
+joblib.dump(rf, MODELS_DIR / "stage1_rf.pkl", compress=3)
+# joblib.dump(xgb, MODELS_DIR / "stage1_xgb.pkl")
 
 print("Stage 1 models trained")
 
 evaluate_model(rf, X_test, y_test, model_name="Random Forest — Stage 1", binary=True)
-evaluate_model(xgb, X_test, y_test, model_name="XGBoost — Stage 1", binary=True)
+# evaluate_model(xgb, X_test, y_test, model_name="XGBoost — Stage 1", binary=True)
