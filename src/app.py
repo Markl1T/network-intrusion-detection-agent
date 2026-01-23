@@ -107,6 +107,10 @@ with c4:
 
 btn_col1, btn_col2, btn_col3 = st.columns([1,1,2])
 
+ANOMALY_THRESHOLD = 0.03
+ALPHA = 0.8
+COMBINED_THRESHOLD = 0.5
+
 def generate_random_flow():
     r = sample_pool.sample(1).iloc[0]
     st.session_state.current_row = r
@@ -119,19 +123,13 @@ with btn_col1:
 with btn_col2:
     run_clicked = st.button("Run Detection", type="primary")
 
-min_s, max_s, default_thresh = -0.05, 0.20, 0.03
 with btn_col3:
     detection_strategy = st.selectbox("Detection Strategy", [
-        "Stage1 only (use classifier)",
+        "Stage1 only",
         "Stage0 OR Stage1 (either flags)",
         "Stage0 AND Stage1 (both must flag)",
         "Combined score (weighted Stage0 + Stage1)"
-    ], index=1)
-    anomaly_threshold = st.slider("Stage0 anomaly threshold", min_value=min_s, max_value=max_s, value=default_thresh, step=(max_s - min_s) / 100 if max_s>min_s else 0.1)
-
-    # Fusion controls (used by Combined score strategy)
-    alpha = st.slider("Fusion alpha (weight for Stage1 probability)", 0.0, 1.0, value=0.8, step=0.01)
-    combined_threshold = st.slider("Combined decision threshold", 0.0, 1.0, value=0.5, step=0.01)    
+    ], index=0)
 
 if st.session_state.get("_generated"):
     st.success("Loaded a random real flow — fields updated.\nYou can edit values before running detection.")
@@ -170,7 +168,7 @@ if run_clicked:
 
     # Stage0 -> anomaly score
     anomaly_score = -stage0_model.decision_function(X)[0]
-    stage0_flag = anomaly_score >= anomaly_threshold
+    stage0_flag = anomaly_score >= ANOMALY_THRESHOLD
 
     # Stage1 -> classifier (try to get probability)
     if hasattr(stage1_model, "predict_proba"):
@@ -178,13 +176,6 @@ if run_clicked:
     else:
         p1 = float(stage1_model.predict(X)[0])
         st.info("Note: Stage1 model has no predict_proba; using hard prediction as proxy for probability.")
-
-
-    # normalize Stage0 anomaly score to [0,1]
-    if max_s > min_s:
-        s0_norm = float(np.clip((anomaly_score - min_s) / (max_s - min_s), 0.0, 1.0))
-    else:
-        s0_norm = 0.0
 
     # Final decision using chosen strategy
     if detection_strategy.startswith("Stage1 only"):
@@ -195,8 +186,8 @@ if run_clicked:
         final_malicious = (p1 >= 0.5) and stage0_flag
     else:
         # Combined score
-        combined_score = alpha * p1 + (1 - alpha) * s0_norm
-        final_malicious = (combined_score >= combined_threshold)
+        combined_score = ALPHA * p1 + (1 - ALPHA) * anomaly_score
+        final_malicious = (combined_score >= COMBINED_THRESHOLD)
 
     if final_malicious:
         st.error("🔴 TRAFFIC IS MALICIOUS")
