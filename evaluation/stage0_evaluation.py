@@ -5,12 +5,14 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import (
-    roc_auc_score,
-    average_precision_score,
     f1_score,
     precision_score,
     recall_score
 )
+
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.config import FEATURES, DATASET_PATH
 from src.preprocessing import clean_features
@@ -62,8 +64,6 @@ for values in itertools.product(*param_grid.values()):
 
     results.append({
         **params,
-        "roc_auc": roc_auc_score(y_test, scores),
-        "pr_auc": average_precision_score(y_test, scores),
         "f1": f1_score(y_test, y_pred),
         "precision": precision_score(y_test, y_pred, zero_division=0),
         "recall": recall_score(y_test, y_pred, zero_division=0),
@@ -71,7 +71,7 @@ for values in itertools.product(*param_grid.values()):
 
 
 results_df = pd.DataFrame(results)
-results_df.sort_values("roc_auc", ascending=False, inplace=True)
+results_df.sort_values("f1", ascending=False, inplace=True)
 
 results_df.to_csv(
     "results/stage0_hyperparameter_results.csv",

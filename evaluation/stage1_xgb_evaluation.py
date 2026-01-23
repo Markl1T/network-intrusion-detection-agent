@@ -5,12 +5,14 @@ import xgboost as xgb
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
-    roc_auc_score,
-    average_precision_score,
     f1_score,
     precision_score,
     recall_score
 )
+
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.config import FEATURES, DATASET_PATH
 from src.preprocessing import clean_features
@@ -60,13 +62,10 @@ for values in itertools.product(*param_grid.values()):
     print(f"Training with parameters: {params}")
     model.fit(X_train, y_train)
 
-    y_proba = model.predict_proba(X_test)[:, 1]
-    y_pred = (y_proba >= 0.5).astype(int)
+    y_pred = model.predict(X_test)
 
     result = {
         **params,
-        "roc_auc": roc_auc_score(y_test, y_proba),
-        "pr_auc": average_precision_score(y_test, y_proba),
         "f1": f1_score(y_test, y_pred),
         "precision": precision_score(y_test, y_pred, zero_division=0),
         "recall": recall_score(y_test, y_pred, zero_division=0),
@@ -76,7 +75,7 @@ for values in itertools.product(*param_grid.values()):
 
 
 results_df = pd.DataFrame(results)
-results_df.sort_values("roc_auc", ascending=False, inplace=True)
+results_df.sort_values("f1", ascending=False, inplace=True)
 results_df.to_csv("results/stage1_xgb_hyperparameter_results.csv", index=False)
 
 print("\nHyperparameter search complete.")

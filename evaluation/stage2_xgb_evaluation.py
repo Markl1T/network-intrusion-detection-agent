@@ -10,6 +10,10 @@ from sklearn.metrics import (
     recall_score
 )
 
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from src.config import FEATURES, DATASET_PATH
 from src.preprocessing import clean_features, encode_multiclass
 
@@ -59,8 +63,8 @@ for values in itertools.product(*param_grid.values()):
 
     results.append({
         **params,
-        "accuracy": accuracy_score(y_test, y_pred),
         "f1_macro": f1_score(y_test, y_pred, average="macro"),
+        "accuracy": accuracy_score(y_test, y_pred),
         "f1_weighted": f1_score(y_test, y_pred, average="weighted"),
         "precision_macro": precision_score(y_test, y_pred, average="macro", zero_division=0),
         "recall_macro": recall_score(y_test, y_pred, average="macro", zero_division=0),

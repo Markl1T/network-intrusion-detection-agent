@@ -4,11 +4,14 @@ from sklearn.metrics import (
     accuracy_score,
     precision_score,
     recall_score,
-    f1_score,
-    roc_auc_score
+    f1_score
 )
 from sklearn.ensemble import RandomForestClassifier
 import itertools
+
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.config import FEATURES, DATASET_PATH
 from src.preprocessing import clean_features
@@ -52,7 +55,6 @@ for params in itertools.product(*param_grid.values()):
     model.fit(X_train, y_train)
 
     y_pred = model.predict(X_test)
-    y_proba = model.predict_proba(X_test)[:, 1]
 
     results.append({
         **config,
@@ -60,11 +62,10 @@ for params in itertools.product(*param_grid.values()):
         "precision": precision_score(y_test, y_pred, zero_division=0),
         "recall": recall_score(y_test, y_pred, zero_division=0),
         "f1": f1_score(y_test, y_pred, zero_division=0),
-        "roc_auc": roc_auc_score(y_test, y_proba),
     })
 
 results_df = pd.DataFrame(results)
-results_df.sort_values("roc_auc", ascending=False, inplace=True)
+results_df.sort_values("f1", ascending=False, inplace=True)
 
 results_df.to_csv("results/stage1_rf_hyperparameter_results.csv", index=False)
 
