@@ -14,9 +14,37 @@ This project implements an intelligent network intrusion detection system using 
 
 The pipeline is accessible via a **Streamlit web interface** where users can input flow features or generate random samples for testing. You can select either Stage 0, Stage 1 or both models for detecting malicious traffic, and then Stage 2 model for classifying the type of attack.
 
+
+## AI Methodologies
+
+### Unsupervised Learning
+ - **Isolation Forest**
+
+   - Trained only on benign flows to detect anomalous network behavior without requiring labeled attacks.
+
+### Supervised Learning
+ - **Binary Classifier with XGBoost/RandomForest**
+
+   - Classifies traffic as Benign or Malicious based on labeled dataset features.
+
+ - **Multiclass Classifier with XGBoost/RandomForest**
+ 
+   - Predicts specific attack type using malicious flow features. Encodes the attack labels using a LabelEncoder.
+
+
 ## Live Demo
 The Streamlit application is available at:
 https://network-intrusion-detection-agent.streamlit.app/
+
+
+## App Interface
+- Benign Prediction
+
+<img src="images/benign_prediction.png">
+
+- Malicious Prediction
+
+<img src="images/malicious_prediction.png">
 
 
 ## Installation and Setup
@@ -59,30 +87,13 @@ network-intrusion-detector-agent/
 │   ├─ build_sample.py     # Script to build sample pool
 │   ├─ config.py           # Paths, features, and constants
 │   ├─ preprocessing.py    # Feature cleaning and encoding
-│   ├─ train_anomaly.py    # Train the model to detect anomalies
+│   ├─ train_stage0.py     # Train the model to detect anomalies
 │   ├─ train_stage1.py     # Train the model to classify Benign/Malicious classification
 │   └─ train_stage2.py     # Train the model to classify the type of malicious attack
 │
 ├─ requirements.txt        # Requirements to run the code
 └─ README.md
 ```
-
-
-## AI Methodologies
-
-### Unsupervised Learning
- - **Isolation Forest**
-
-   - Trained only on benign flows to detect anomalous network behavior without requiring labeled attacks.
-
-### Supervised Learning
- - **Binary Classifier with XGBoost/RandomForest**
-
-   - Classifies traffic as Benign or Malicious based on labeled dataset features.
-
- - **Multiclass Classifier with XGBoost/RandomForest**
- 
-   - Predicts specific attack type using malicious flow features. Encodes the attack labels using a LabelEncoder.
 
 
 ## Notes
